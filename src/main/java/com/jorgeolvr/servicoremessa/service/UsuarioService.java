@@ -97,14 +97,7 @@ public class UsuarioService {
         }
 
         Usuario usuario = new Usuario();
-        usuario.setNome(usuarioRequest.getNome());
-        usuario.setEmail(usuarioRequest.getEmail());
-        usuario.setSenha(PasswordUtils.criptografarSenha(usuarioRequest.getSenha()));
-        usuario.setSaldoReal(usuarioRequest.getSaldoReal());
-        usuario.setSaldoDolar(usuarioRequest.getSaldoDolar());
-        usuario.setTipoPessoa(usuarioRequest.getTipoPessoa());
-        usuario.setPessoaFisica(_pessoaFisica);
-        usuario.setPessoaJuridica(_pessoaJuridica);
+        montarUsuario(usuario, usuarioRequest, _pessoaFisica, _pessoaJuridica);
 
         return usuarioMapper.toResponse(usuarioRepository.save(usuario));
     }
@@ -135,18 +128,22 @@ public class UsuarioService {
 
 
             Usuario _usuario = usuario.get();
-            _usuario.setNome(usuarioRequest.getNome());
-            _usuario.setEmail(usuarioRequest.getEmail());
-            _usuario.setSenha(PasswordUtils.criptografarSenha(usuarioRequest.getSenha()));
-            _usuario.setSaldoReal(usuarioRequest.getSaldoReal());
-            _usuario.setSaldoDolar(usuarioRequest.getSaldoDolar());
-            _usuario.setTipoPessoa(usuarioRequest.getTipoPessoa());
-            _usuario.setPessoaFisica(_pessoaFisica);
-            _usuario.setPessoaJuridica(_pessoaJuridica);
+            montarUsuario(_usuario, usuarioRequest, _pessoaFisica, _pessoaJuridica);
 
             return usuarioMapper.toResponse(usuarioRepository.save(_usuario));
         } else {
             return null;
         }
+    }
+
+    public void montarUsuario(Usuario usuario, UsuarioRequest usuarioRequest, PessoaFisica pessoaFisica, PessoaJuridica pessoaJuridica) {
+        usuario.setNome(usuarioRequest.getNome());
+        usuario.setEmail(usuarioRequest.getEmail());
+        usuario.setSenha(PasswordUtils.criptografarSenha(usuarioRequest.getSenha()));
+        usuario.setSaldoReal(usuarioRequest.getSaldoReal());
+        usuario.setSaldoDolar(usuarioRequest.getSaldoDolar());
+        usuario.setTipoPessoa(usuarioRequest.getTipoPessoa());
+        usuario.setPessoaFisica(pessoaFisica);
+        usuario.setPessoaJuridica(pessoaJuridica);
     }
 }

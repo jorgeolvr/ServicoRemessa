@@ -73,11 +73,12 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<UsuarioResponse> criar(@Valid @RequestBody UsuarioRequest usuarioRequest, HttpServletRequest request) {
-       try {
-            UsuarioResponse usuarioResponse = usuarioService.criar(usuarioRequest);
+        UsuarioResponse usuarioResponse = usuarioService.criar(usuarioRequest);
+
+        if (Objects.nonNull(usuarioResponse)) {
             return ResponseEntity.created(URI.create(request.getRequestURI() + "/" + usuarioResponse.getId())).build();
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else  {
+            return new ResponseEntity<>(usuarioResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

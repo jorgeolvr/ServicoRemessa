@@ -23,9 +23,9 @@ public class UsuarioRequest {
 
     private String senha;
 
-    private BigDecimal saldoReal;
+    private BigDecimal saldoReal = BigDecimal.ZERO;
 
-    private BigDecimal saldoDolar;
+    private BigDecimal saldoDolar = BigDecimal.ZERO;
 
     private TipoPessoa tipoPessoa;
 
