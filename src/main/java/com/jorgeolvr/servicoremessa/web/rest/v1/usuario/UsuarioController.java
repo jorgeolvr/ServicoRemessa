@@ -2,7 +2,7 @@ package com.jorgeolvr.servicoremessa.web.rest.v1.usuario;
 
 import com.jorgeolvr.servicoremessa.dto.usuario.request.UsuarioRequest;
 import com.jorgeolvr.servicoremessa.dto.usuario.response.UsuarioResponse;
-import com.jorgeolvr.servicoremessa.service.UsuarioService;
+import com.jorgeolvr.servicoremessa.service.usuario.UsuarioService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @Slf4j
 @Validated
@@ -27,7 +26,7 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @GetMapping(value = "/id/{id}")
+    @GetMapping(value = "/buscar-por-id/{id}")
     public ResponseEntity<UsuarioResponse> buscarporId(@PathVariable("id") final Long id) {
         UsuarioResponse usuarioResponse = usuarioService.buscarPorId(id);
 
@@ -38,7 +37,7 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping(value = "/cpf/{cpf}")
+    @GetMapping(value = "/buscar-por-cpf/{cpf}")
     public ResponseEntity<UsuarioResponse> buscarporCpf(@PathVariable("cpf") final String cpf) {
         UsuarioResponse usuarioResponse = usuarioService.buscarPorCpf(cpf);
 
@@ -49,7 +48,7 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping(value = "/cnpj/{cnpj}")
+    @GetMapping(value = "/buscar-por-cnpj/{cnpj}")
     public ResponseEntity<UsuarioResponse> buscarporCnpj(@PathVariable("cnpj") final String cnpj) {
         UsuarioResponse usuarioResponse = usuarioService.buscarPorCnpj(cnpj);
 

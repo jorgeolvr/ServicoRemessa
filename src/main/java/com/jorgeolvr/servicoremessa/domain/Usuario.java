@@ -1,5 +1,6 @@
 package com.jorgeolvr.servicoremessa.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jorgeolvr.servicoremessa.enums.TipoPessoa;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table
@@ -49,4 +51,8 @@ public class Usuario {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pessoa_juridica_id", referencedColumnName = "id")
     private PessoaJuridica pessoaJuridica;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Transacao> transacao;
 }

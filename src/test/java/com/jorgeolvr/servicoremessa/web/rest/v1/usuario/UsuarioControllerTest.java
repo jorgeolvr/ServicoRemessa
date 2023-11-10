@@ -8,7 +8,7 @@ import com.jorgeolvr.servicoremessa.dto.pessoajuridica.response.PessoaJuridicaRe
 import com.jorgeolvr.servicoremessa.dto.usuario.request.UsuarioRequest;
 import com.jorgeolvr.servicoremessa.dto.usuario.response.UsuarioResponse;
 import com.jorgeolvr.servicoremessa.enums.TipoPessoa;
-import com.jorgeolvr.servicoremessa.service.UsuarioService;
+import com.jorgeolvr.servicoremessa.service.usuario.UsuarioService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

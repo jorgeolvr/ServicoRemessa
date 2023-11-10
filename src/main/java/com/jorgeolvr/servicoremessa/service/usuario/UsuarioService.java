@@ -1,4 +1,4 @@
-package com.jorgeolvr.servicoremessa.service;
+package com.jorgeolvr.servicoremessa.service.usuario;
 
 import com.jorgeolvr.servicoremessa.domain.PessoaFisica;
 import com.jorgeolvr.servicoremessa.domain.PessoaJuridica;
@@ -9,11 +9,9 @@ import com.jorgeolvr.servicoremessa.enums.TipoPessoa;
 import com.jorgeolvr.servicoremessa.repository.PessoaFisicaRepository;
 import com.jorgeolvr.servicoremessa.repository.PessoaJuridicaRepository;
 import com.jorgeolvr.servicoremessa.repository.UsuarioRepository;
-import com.jorgeolvr.servicoremessa.service.mapper.UsuarioMapper;
+import com.jorgeolvr.servicoremessa.service.usuario.mapper.UsuarioMapper;
 import com.jorgeolvr.servicoremessa.utils.PasswordUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

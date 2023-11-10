@@ -1,4 +1,4 @@
-package com.jorgeolvr.servicoremessa.service.mapper;
+package com.jorgeolvr.servicoremessa.service.usuario.mapper;
 
 import com.jorgeolvr.servicoremessa.domain.PessoaFisica;
 import com.jorgeolvr.servicoremessa.domain.PessoaJuridica;
@@ -84,6 +84,53 @@ public class UsuarioMapper {
         }
 
         return pessoaJuridica;
+    }
+
+    public PessoaFisicaRequest toPessoaFisicaRequest(Usuario usuario) {
+        PessoaFisicaRequest pessoaFisicaRequest = new PessoaFisicaRequest();
+        pessoaFisicaRequest.setCpf(usuario.getPessoaFisica().getCpf());
+
+        return pessoaFisicaRequest;
+    }
+
+    public PessoaJuridicaRequest toPessoaJuridicaRequest(Usuario usuario) {
+        PessoaJuridicaRequest pessoaJuridicaRequest = new PessoaJuridicaRequest();
+        pessoaJuridicaRequest.setCnpj(usuario.getPessoaJuridica().getCnpj());
+
+
+        return pessoaJuridicaRequest;
+    }
+
+    public UsuarioRequest toRequest(Usuario usuario) {
+        UsuarioRequest usuarioRequest = new UsuarioRequest();
+
+        usuarioRequest.setId(usuario.getId());
+        usuarioRequest.setNome(usuario.getNome());
+        usuarioRequest.setEmail(usuario.getEmail());
+        usuarioRequest.setSenha(usuario.getSenha());
+        usuarioRequest.setSaldoReal(usuario.getSaldoReal());
+        usuarioRequest.setSaldoDolar(usuario.getSaldoDolar());
+        usuarioRequest.setTipoPessoa(usuario.getTipoPessoa());
+
+        if (Objects.nonNull(usuario.getPessoaFisica())) {
+            PessoaFisicaRequest pessoaFisicaRequest = new PessoaFisicaRequest();
+
+            pessoaFisicaRequest.setId(usuario.getPessoaFisica().getId());
+            pessoaFisicaRequest.setCpf(usuario.getPessoaFisica().getCpf());
+
+            usuarioRequest.setPessoaFisica(pessoaFisicaRequest);
+        }
+
+        if (Objects.nonNull(usuario.getPessoaJuridica())) {
+            PessoaJuridicaRequest pessoaJuridicaRequest = new PessoaJuridicaRequest();
+
+            pessoaJuridicaRequest.setId(usuario.getPessoaJuridica().getId());
+            pessoaJuridicaRequest.setCnpj(usuario.getPessoaJuridica().getCnpj());
+
+            usuarioRequest.setPessoaJuridica(pessoaJuridicaRequest);
+        }
+
+        return usuarioRequest;
     }
 
     public UsuarioResponse toResponse(Usuario usuario) {
