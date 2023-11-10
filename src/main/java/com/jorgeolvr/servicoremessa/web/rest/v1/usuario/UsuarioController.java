@@ -14,7 +14,6 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api/v1/backend/usuario")
 public class UsuarioController {
-
     private final UsuarioService usuarioService;
 
     public UsuarioController(UsuarioService usuarioService) {

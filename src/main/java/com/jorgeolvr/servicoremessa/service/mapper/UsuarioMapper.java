@@ -66,7 +66,7 @@ public class UsuarioMapper {
     }
 
     public PessoaFisica toEntity(PessoaFisicaResponse pessoaFisicaResponse) {
-        PessoaFisica pessoaFisica = null;
+        PessoaFisica pessoaFisica = new PessoaFisica();
 
         if (Objects.nonNull(pessoaFisicaResponse)) {
             pessoaFisica.setId(pessoaFisicaResponse.getId());
@@ -78,7 +78,7 @@ public class UsuarioMapper {
     }
 
     public PessoaJuridica toEntity(PessoaJuridicaResponse pessoaJuridicaResponse) {
-        PessoaJuridica pessoaJuridica = null;
+        PessoaJuridica pessoaJuridica = new PessoaJuridica();
 
         if (Objects.nonNull(pessoaJuridicaResponse)) {
             pessoaJuridica.setId(pessoaJuridicaResponse.getId());

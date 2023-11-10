@@ -17,10 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class UsuarioService {
-
     private final UsuarioRepository usuarioRepository;
     private final PessoaFisicaRepository pessoaFisicaRepository;
-
     private final PessoaJuridicaRepository pessoaJuridicaRepository;
     private final UsuarioMapper usuarioMapper;
 
