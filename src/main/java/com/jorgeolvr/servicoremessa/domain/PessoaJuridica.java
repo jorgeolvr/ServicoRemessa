@@ -18,7 +18,7 @@ public class PessoaJuridica {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotNull
+    @NotNull(message = "cnpj não pode ser nulo")
     @Column(name = "cnpj", length = 14, unique = true)
     private String cnpj;
 }

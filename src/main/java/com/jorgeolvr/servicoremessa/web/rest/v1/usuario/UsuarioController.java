@@ -4,9 +4,11 @@ import com.jorgeolvr.servicoremessa.dto.usuario.request.UsuarioRequest;
 import com.jorgeolvr.servicoremessa.dto.usuario.response.UsuarioResponse;
 import com.jorgeolvr.servicoremessa.service.UsuarioService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -15,6 +17,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/api/v1/backend/usuario")
 public class UsuarioController {
@@ -26,7 +29,13 @@ public class UsuarioController {
 
     @GetMapping(value = "/id/{id}")
     public ResponseEntity<UsuarioResponse> buscarporId(@PathVariable("id") final Long id) {
-        return ResponseEntity.ok(usuarioService.buscarPorId(id));
+        UsuarioResponse usuarioResponse = usuarioService.buscarPorId(id);
+
+        if (Objects.isNull(usuarioResponse)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return ResponseEntity.ok(usuarioResponse);
+        }
     }
 
     @GetMapping(value = "/cpf/{cpf}")
@@ -63,8 +72,8 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioResponse> criar(@RequestBody UsuarioRequest usuarioRequest, HttpServletRequest request) {
-        try {
+    public ResponseEntity<UsuarioResponse> criar(@Valid @RequestBody UsuarioRequest usuarioRequest, HttpServletRequest request) {
+       try {
             UsuarioResponse usuarioResponse = usuarioService.criar(usuarioRequest);
             return ResponseEntity.created(URI.create(request.getRequestURI() + "/" + usuarioResponse.getId())).build();
         } catch (Exception e) {

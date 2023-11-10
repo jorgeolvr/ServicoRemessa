@@ -18,7 +18,7 @@ public class PessoaFisica {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotNull
+    @NotNull(message = "cpf não pode ser nulo")
     @Column(name = "cpf", length = 11, unique = true)
     private String cpf;
 }

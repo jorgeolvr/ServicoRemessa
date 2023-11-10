@@ -23,22 +23,23 @@ public class Usuario {
     @Column(length = 50)
     private String nome;
 
-    @NotNull
+    @NotNull(message = "email não pode ser nulo")
     @Column(length = 100, unique = true)
     private String email;
 
-    @NotNull
+    @NotNull(message = "senha não pode ser nulo")
     @Column
     private String senha;
 
-    @NotNull
+    @NotNull(message = "saldoReal não pode ser nulo")
     @Column
     private BigDecimal saldoReal = BigDecimal.ZERO;
 
-    @NotNull
+    @NotNull(message = "saldoDolar não pode ser nulo")
     @Column
     private BigDecimal saldoDolar = BigDecimal.ZERO;
 
+    @NotNull(message = "tipoPessoa não pode ser nulo")
     @Enumerated(EnumType.STRING)
     @Column(length = 11, name = "tipo_pessoa")
     private TipoPessoa tipoPessoa;
