@@ -26,7 +26,7 @@ public class CotacaoApi {
         webClient = builder.baseUrl(BASE_URL).build();
     }
 
-    public ValueResponse getCotacaoDolarDia() throws Throwable {
+    public ValueResponse buscarCotacaoDolarDia() throws Throwable {
         ValueResponse valueResponse = null;
         LocalDate localDate = LocalDate.now();
 

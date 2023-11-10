@@ -2,6 +2,7 @@ package com.jorgeolvr.servicoremessa.domain;
 
 import com.jorgeolvr.servicoremessa.enums.TipoPessoa;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,18 +17,23 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @NotNull
     @Column(length = 50)
     private String nome;
 
+    @NotNull
     @Column(length = 100, unique = true)
     private String email;
 
+    @NotNull
     @Column
     private String senha;
 
+    @NotNull
     @Column
     private BigDecimal saldoReal = BigDecimal.ZERO;
 
+    @NotNull
     @Column
     private BigDecimal saldoDolar = BigDecimal.ZERO;
 

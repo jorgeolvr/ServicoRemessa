@@ -10,6 +10,7 @@ import com.jorgeolvr.servicoremessa.repository.PessoaFisicaRepository;
 import com.jorgeolvr.servicoremessa.repository.PessoaJuridicaRepository;
 import com.jorgeolvr.servicoremessa.repository.UsuarioRepository;
 import com.jorgeolvr.servicoremessa.service.mapper.UsuarioMapper;
+import com.jorgeolvr.servicoremessa.utils.PasswordUtils;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class UsuarioService {
         Usuario usuario = new Usuario();
         usuario.setNome(usuarioRequest.getNome());
         usuario.setEmail(usuarioRequest.getEmail());
-        usuario.setSenha(usuarioRequest.getSenha());
+        usuario.setSenha(PasswordUtils.criptografarSenha(usuarioRequest.getSenha()));
         usuario.setSaldoReal(usuarioRequest.getSaldoReal());
         usuario.setSaldoDolar(usuarioRequest.getSaldoDolar());
         usuario.setTipoPessoa(usuarioRequest.getTipoPessoa());
