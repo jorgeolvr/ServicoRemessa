@@ -56,7 +56,7 @@ class UsuarioControllerTest {
         UsuarioResponse usuarioResponseMock = getUsuarioPesoaFisicaResponse();
 
         when(usuarioService.buscarPorId(id)).thenReturn(usuarioResponseMock);
-        mvc.perform(get(PATH + "/id/" + id)).andDo(print()).andExpect(status().isOk());
+        mvc.perform(get(PATH + "/buscar-por-id/" + id)).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
@@ -66,7 +66,7 @@ class UsuarioControllerTest {
         UsuarioResponse usuarioResponseMock = null;
 
         when(usuarioService.buscarPorId(id)).thenReturn(usuarioResponseMock);
-        mvc.perform(get(PATH + "/id/" + id)).andDo(print()).andExpect(status().isNoContent());
+        mvc.perform(get(PATH + "/buscar-por-id/" + id)).andDo(print()).andExpect(status().isNoContent());
     }
 
     @Test
@@ -76,7 +76,7 @@ class UsuarioControllerTest {
         UsuarioResponse usuarioResponseMock = getUsuarioPesoaFisicaResponse();
 
         when(usuarioService.buscarPorCpf(cpf)).thenReturn(usuarioResponseMock);
-        mvc.perform(get(PATH + "/cpf/" + cpf)).andDo(print()).andExpect(status().isOk());
+        mvc.perform(get(PATH + "/buscar-por-cpf/" + cpf)).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
@@ -86,7 +86,7 @@ class UsuarioControllerTest {
         UsuarioResponse usuarioResponseMock = new UsuarioResponse();
 
         when(usuarioService.buscarPorCpf(cpf)).thenReturn(usuarioResponseMock);
-        mvc.perform(get(PATH + "/cpf/" + cpf)).andDo(print()).andExpect(status().isNoContent());
+        mvc.perform(get(PATH + "/buscar-por-cpf/" + cpf)).andDo(print()).andExpect(status().isNoContent());
     }
 
     @Test
@@ -96,7 +96,7 @@ class UsuarioControllerTest {
         UsuarioResponse usuarioResponseMock = getUsuarioPesoaJuridicaResponse();
 
         when(usuarioService.buscarPorCnpj(cnpj)).thenReturn(usuarioResponseMock);
-        mvc.perform(get(PATH + "/cnpj/" + cnpj)).andDo(print()).andExpect(status().isOk());
+        mvc.perform(get(PATH + "/buscar-por-cnpj/" + cnpj)).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
@@ -106,7 +106,7 @@ class UsuarioControllerTest {
         UsuarioResponse usuarioResponseMock = new UsuarioResponse();
 
         when(usuarioService.buscarPorCnpj(cnpj)).thenReturn(usuarioResponseMock);
-        mvc.perform(get(PATH + "/cnpj/" + cnpj)).andDo(print()).andExpect(status().isNoContent());
+        mvc.perform(get(PATH + "/buscar-por-cnpj/" + cnpj)).andDo(print()).andExpect(status().isNoContent());
     }
 
     @Test
