@@ -92,7 +92,7 @@ class UsuarioServiceTest {
     @Test
     @DisplayName("Validação do fluxo de criação de buscar usuário pessoa jurídica pelo cnpj")
     void buscarUsuarioPessoaFisicaPorCnpj() {
-        String cnpj = "33833961007";
+        String cnpj = "72872933000180";
 
         Usuario usuario = getUsuarioPessoaJuridica();
         UsuarioResponse usuarioResponseMock = getUsuarioPessoaJuridicaResponse();
