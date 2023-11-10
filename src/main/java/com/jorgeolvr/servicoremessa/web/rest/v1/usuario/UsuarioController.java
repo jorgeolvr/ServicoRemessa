@@ -5,10 +5,14 @@ import com.jorgeolvr.servicoremessa.dto.usuario.response.UsuarioResponse;
 import com.jorgeolvr.servicoremessa.service.UsuarioService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -17,13 +21,66 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     public UsuarioController(UsuarioService usuarioService) {
-
         this.usuarioService = usuarioService;
+    }
+
+    @GetMapping(value = "/id/{id}")
+    public ResponseEntity<UsuarioResponse> buscarporId(@PathVariable("id") final Long id) {
+        return ResponseEntity.ok(usuarioService.buscarPorId(id));
+    }
+
+    @GetMapping(value = "/cpf/{cpf}")
+    public ResponseEntity<UsuarioResponse> buscarporCpf(@PathVariable("cpf") final String cpf) {
+        UsuarioResponse usuarioResponse = usuarioService.buscarPorCpf(cpf);
+
+        if (Objects.isNull(usuarioResponse.getPessoaFisica())) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return ResponseEntity.ok(usuarioResponse);
+        }
+    }
+
+    @GetMapping(value = "/cnpj/{cnpj}")
+    public ResponseEntity<UsuarioResponse> buscarporCnpj(@PathVariable("cnpj") final String cnpj) {
+        UsuarioResponse usuarioResponse = usuarioService.buscarPorCnpj(cnpj);
+
+        if (Objects.isNull(usuarioResponse.getPessoaJuridica())) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return ResponseEntity.ok(usuarioResponse);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UsuarioResponse>> buscarTodos() {
+        List<UsuarioResponse> usuarioResponses = usuarioService.buscarTodos();
+
+        if (usuarioResponses.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return ResponseEntity.ok(usuarioResponses);
+        }
     }
 
     @PostMapping
     public ResponseEntity<UsuarioResponse> criar(@RequestBody UsuarioRequest usuarioRequest, HttpServletRequest request) {
-        UsuarioResponse usuarioResponse = usuarioService.criar(usuarioRequest);
-        return ResponseEntity.created(URI.create(request.getRequestURI() + "/" + usuarioResponse.getId())).build();
+        try {
+            UsuarioResponse usuarioResponse = usuarioService.criar(usuarioRequest);
+            return ResponseEntity.created(URI.create(request.getRequestURI() + "/" + usuarioResponse.getId())).build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<UsuarioResponse> atualizar(@PathVariable("id") final Long id,
+                                                     @RequestBody UsuarioRequest usuarioRequest, HttpServletRequest request) {
+        UsuarioResponse usuarioResponse = usuarioService.atualizar(id, usuarioRequest);
+
+        if (Objects.isNull(usuarioResponse)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return ResponseEntity.ok(usuarioResponse);
+        }
     }
 }

@@ -17,8 +17,6 @@ import java.util.Objects;
 public class UsuarioMapper {
     public Usuario toEntity(UsuarioRequest usuarioRequest) {
         Usuario usuario = new Usuario();
-        PessoaFisica pessoaFisica = new PessoaFisica();
-        PessoaJuridica pessoaJuridica = new PessoaJuridica();
 
         usuario.setId(usuarioRequest.getId());
         usuario.setNome(usuarioRequest.getNome());
@@ -29,19 +27,22 @@ public class UsuarioMapper {
         usuario.setTipoPessoa(usuarioRequest.getTipoPessoa());
 
         if (Objects.nonNull(usuarioRequest.getPessoaFisica())) {
+            PessoaFisica pessoaFisica = new PessoaFisica();
+
             pessoaFisica.setId(usuarioRequest.getPessoaFisica().getId());
             pessoaFisica.setCpf(usuarioRequest.getPessoaFisica().getCpf());
-            pessoaFisica.setUsuario(usuarioRequest.getPessoaFisica().getUsuario());
+
+            usuario.setPessoaFisica(pessoaFisica);
         }
 
         if (Objects.nonNull(usuarioRequest.getPessoaJuridica())) {
+            PessoaJuridica pessoaJuridica = new PessoaJuridica();
+
             pessoaJuridica.setId(usuarioRequest.getPessoaJuridica().getId());
             pessoaJuridica.setCnpj(usuarioRequest.getPessoaJuridica().getCnpj());
-            pessoaJuridica.setUsuario(usuarioRequest.getPessoaJuridica().getUsuario());
-        }
 
-        usuario.setPessoaFisica(pessoaFisica);
-        usuario.setPessoaJuridica(pessoaJuridica);
+            usuario.setPessoaJuridica(pessoaJuridica);
+        }
 
         return usuario;
     }
@@ -50,7 +51,6 @@ public class UsuarioMapper {
 
         pessoaFisica.setId(pessoaFisicaRequest.getId());
         pessoaFisica.setCpf(pessoaFisicaRequest.getCpf());
-        pessoaFisica.setUsuario(pessoaFisicaRequest.getUsuario());
 
         return pessoaFisica;
     }
@@ -60,7 +60,6 @@ public class UsuarioMapper {
 
         pessoaJuridica.setId(pessoaJuridicaRequest.getId());
         pessoaJuridica.setCnpj(pessoaJuridicaRequest.getCnpj());
-        pessoaJuridica.setUsuario(pessoaJuridicaRequest.getUsuario());
 
         return pessoaJuridica;
     }
@@ -71,7 +70,6 @@ public class UsuarioMapper {
         if (Objects.nonNull(pessoaFisicaResponse)) {
             pessoaFisica.setId(pessoaFisicaResponse.getId());
             pessoaFisica.setCpf(pessoaFisicaResponse.getCpf());
-            pessoaFisica.setUsuario(pessoaFisicaResponse.getUsuario());
         }
 
         return pessoaFisica;
@@ -83,7 +81,6 @@ public class UsuarioMapper {
         if (Objects.nonNull(pessoaJuridicaResponse)) {
             pessoaJuridica.setId(pessoaJuridicaResponse.getId());
             pessoaJuridica.setCnpj(pessoaJuridicaResponse.getCnpj());
-            pessoaJuridica.setUsuario(pessoaJuridicaResponse.getUsuario());
         }
 
         return pessoaJuridica;
@@ -91,8 +88,6 @@ public class UsuarioMapper {
 
     public UsuarioResponse toResponse(Usuario usuario) {
         UsuarioResponse usuarioResponse = new UsuarioResponse();
-        PessoaFisicaResponse pessoaFisicaResponse = new PessoaFisicaResponse();
-        PessoaJuridicaResponse pessoaJuridicaResponse = new PessoaJuridicaResponse();
 
         usuarioResponse.setId(usuario.getId());
         usuarioResponse.setNome(usuario.getNome());
@@ -103,19 +98,22 @@ public class UsuarioMapper {
         usuarioResponse.setTipoPessoa(usuario.getTipoPessoa());
 
         if (Objects.nonNull(usuario.getPessoaFisica())) {
+            PessoaFisicaResponse pessoaFisicaResponse = new PessoaFisicaResponse();
+
             pessoaFisicaResponse.setId(usuario.getPessoaFisica().getId());
             pessoaFisicaResponse.setCpf(usuario.getPessoaFisica().getCpf());
-            pessoaFisicaResponse.setUsuario(usuario.getPessoaFisica().getUsuario());
+
+            usuarioResponse.setPessoaFisica(pessoaFisicaResponse);
         }
 
         if (Objects.nonNull(usuario.getPessoaJuridica())) {
+            PessoaJuridicaResponse pessoaJuridicaResponse = new PessoaJuridicaResponse();
+
             pessoaJuridicaResponse.setId(usuario.getPessoaJuridica().getId());
             pessoaJuridicaResponse.setCnpj(usuario.getPessoaJuridica().getCnpj());
-            pessoaJuridicaResponse.setUsuario(usuario.getPessoaJuridica().getUsuario());
-        }
 
-        usuarioResponse.setPessoaFisica(pessoaFisicaResponse);
-        usuarioResponse.setPessoaJuridica(pessoaJuridicaResponse);
+            usuarioResponse.setPessoaJuridica(pessoaJuridicaResponse);
+        }
 
         return usuarioResponse;
     }

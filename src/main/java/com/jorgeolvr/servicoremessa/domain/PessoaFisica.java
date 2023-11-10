@@ -1,14 +1,18 @@
 package com.jorgeolvr.servicoremessa.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table
 @Getter
 @Setter
+@NoArgsConstructor
 public class PessoaFisica {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,17 +21,4 @@ public class PessoaFisica {
     @NotNull
     @Column(name = "cpf", length = 11, unique = true)
     private String cpf;
-
-    @OneToOne(mappedBy = "pessoaFisica")
-    private Usuario usuario;
-
-    public PessoaFisica() {
-
-    }
-
-    public PessoaFisica(String cpf, Usuario usuario) {
-       this.cpf = cpf;
-       this.usuario = usuario;
-    }
-
 }

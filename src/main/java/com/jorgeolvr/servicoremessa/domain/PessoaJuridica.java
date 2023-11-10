@@ -1,5 +1,7 @@
 package com.jorgeolvr.servicoremessa.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -19,7 +21,4 @@ public class PessoaJuridica {
     @NotNull
     @Column(name = "cnpj", length = 14, unique = true)
     private String cnpj;
-
-    @OneToOne(mappedBy = "pessoaJuridica")
-    private Usuario usuario;
 }

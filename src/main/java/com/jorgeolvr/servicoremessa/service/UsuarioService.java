@@ -11,9 +11,15 @@ import com.jorgeolvr.servicoremessa.repository.PessoaJuridicaRepository;
 import com.jorgeolvr.servicoremessa.repository.UsuarioRepository;
 import com.jorgeolvr.servicoremessa.service.mapper.UsuarioMapper;
 import com.jorgeolvr.servicoremessa.utils.PasswordUtils;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -29,6 +35,54 @@ public class UsuarioService {
         this.pessoaFisicaRepository = pessoaFisicaRepository;
         this.pessoaJuridicaRepository = pessoaJuridicaRepository;
         this.usuarioMapper = usuarioMapper;
+    }
+
+    @Transactional
+    public UsuarioResponse buscarPorId(Long usuarioId) {
+        UsuarioResponse usuarioResponse = new UsuarioResponse();
+        Optional<Usuario> usuario = usuarioRepository.findById(usuarioId);
+
+        if (usuario.isPresent()) {
+            usuarioResponse = usuarioMapper.toResponse(usuario.get());
+        }
+
+        return usuarioResponse;
+    }
+
+    @Transactional
+    public UsuarioResponse buscarPorCpf(String cpf) {
+        UsuarioResponse usuarioResponse = new UsuarioResponse();
+        Optional<Usuario> usuario = usuarioRepository.findByCpf(cpf);
+
+        if (usuario.isPresent()) {
+            usuarioResponse = usuarioMapper.toResponse(usuario.get());
+        }
+
+        return usuarioResponse;
+    }
+
+    @Transactional
+    public UsuarioResponse buscarPorCnpj(String cnpj) {
+        UsuarioResponse usuarioResponse = new UsuarioResponse();
+        Optional<Usuario> usuario = usuarioRepository.findByCnpj(cnpj);
+
+        if (usuario.isPresent()) {
+            usuarioResponse = usuarioMapper.toResponse(usuario.get());
+        }
+
+        return usuarioResponse;
+    }
+
+    @Transactional
+    public List<UsuarioResponse> buscarTodos() {
+        List<UsuarioResponse> usuarioResponses = new ArrayList<>();
+
+        usuarioRepository.findAll().forEach(usuario -> {
+            UsuarioResponse usuarioResponse = usuarioMapper.toResponse(usuario);
+            usuarioResponses.add(usuarioResponse);
+        });
+
+        return usuarioResponses;
     }
 
     @Transactional
@@ -53,5 +107,46 @@ public class UsuarioService {
         usuario.setPessoaJuridica(_pessoaJuridica);
 
         return usuarioMapper.toResponse(usuarioRepository.save(usuario));
+    }
+
+    @Transactional
+    public UsuarioResponse atualizar(Long id, UsuarioRequest usuarioRequest) {
+        Optional<Usuario> usuario = usuarioRepository.findById(id);
+
+        if (usuario.isPresent()) {
+            PessoaFisica _pessoaFisica = null;
+            PessoaJuridica _pessoaJuridica = null;
+
+            if (TipoPessoa.FISICA.equals(usuarioRequest.getTipoPessoa())) {
+                Optional<PessoaFisica> pessoaFisica = pessoaFisicaRepository.findById(usuario.get().getPessoaFisica().getId());
+
+                if (pessoaFisica.isPresent()) {
+                    _pessoaFisica = pessoaFisica.get();
+                    _pessoaFisica.setCpf(usuarioRequest.getPessoaFisica().getCpf());
+                }
+            } else {
+                Optional<PessoaJuridica> pessoaJuridica = pessoaJuridicaRepository.findById(usuario.get().getPessoaJuridica().getId());
+
+                if (pessoaJuridica.isPresent()) {
+                    _pessoaJuridica = pessoaJuridica.get();
+                    _pessoaJuridica.setCnpj(usuarioRequest.getPessoaJuridica().getCnpj());
+                }
+            }
+
+
+            Usuario _usuario = usuario.get();
+            _usuario.setNome(usuarioRequest.getNome());
+            _usuario.setEmail(usuarioRequest.getEmail());
+            _usuario.setSenha(PasswordUtils.criptografarSenha(usuarioRequest.getSenha()));
+            _usuario.setSaldoReal(usuarioRequest.getSaldoReal());
+            _usuario.setSaldoDolar(usuarioRequest.getSaldoDolar());
+            _usuario.setTipoPessoa(usuarioRequest.getTipoPessoa());
+            _usuario.setPessoaFisica(_pessoaFisica);
+            _usuario.setPessoaJuridica(_pessoaJuridica);
+
+            return usuarioMapper.toResponse(usuarioRepository.save(_usuario));
+        } else {
+            return null;
+        }
     }
 }

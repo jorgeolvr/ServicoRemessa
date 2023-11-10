@@ -4,6 +4,7 @@ import com.jorgeolvr.servicoremessa.enums.TipoPessoa;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 @Table
 @Getter
 @Setter
+@NoArgsConstructor
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,20 +50,4 @@ public class Usuario {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pessoa_juridica_id", referencedColumnName = "id")
     private PessoaJuridica pessoaJuridica;
-
-    public Usuario() {
-
-    }
-
-    public Usuario(String nome, String email, String senha, BigDecimal saldoReal, BigDecimal saldoDolar,
-                   TipoPessoa tipoPessoa, PessoaFisica pessoaFisica, PessoaJuridica pessoaJuridica) {
-        this.nome = nome;
-        this.email = email;
-        this.senha = senha;
-        this.saldoReal = saldoReal;
-        this.saldoDolar = saldoDolar;
-        this.tipoPessoa = tipoPessoa;
-        this.pessoaFisica = pessoaFisica;
-        this.pessoaJuridica = pessoaJuridica;
-    }
 }
