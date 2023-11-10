@@ -1,7 +1,7 @@
 package com.jorgeolvr.servicoremessa.dto.usuario.request;
 
 import com.jorgeolvr.servicoremessa.dto.pessoafisica.request.PessoaFisicaRequest;
-import com.jorgeolvr.servicoremessa.dto.pessoajuridica.response.PessoaJuridicaResponse;
+import com.jorgeolvr.servicoremessa.dto.pessoajuridica.request.PessoaJuridicaRequest;
 import com.jorgeolvr.servicoremessa.enums.TipoPessoa;
 import lombok.Data;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class UsuarioRequest {
 
     private PessoaFisicaRequest pessoaFisica;
 
-    private PessoaJuridicaResponse pessoaJuridica;
+    private PessoaJuridicaRequest pessoaJuridica;
 
 
 }
