@@ -27,6 +27,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,7 +62,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    @DisplayName("Validação do fluxo de criação de buscar usuário pelo id")
+    @DisplayName("Validação do fluxo de buscar usuário pelo id")
     void buscarUsuarioPorId() {
         Long id = 1L;
 
@@ -75,7 +78,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    @DisplayName("Validação do fluxo de criação de buscar usuário pessoa física pelo cpf")
+    @DisplayName("Validação do fluxo de buscar usuário pessoa física pelo cpf")
     void buscarUsuarioPessoaFisicaPorCpf() {
         String cpf = "33833961007";
 
@@ -91,7 +94,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    @DisplayName("Validação do fluxo de criação de buscar usuário pessoa jurídica pelo cnpj")
+    @DisplayName("Validação do fluxo de buscar usuário pessoa jurídica pelo cnpj")
     void buscarUsuarioPessoaFisicaPorCnpj() {
         String cnpj = "72872933000180";
 
@@ -104,6 +107,18 @@ class UsuarioServiceTest {
         UsuarioResponse usuarioResponse = usuarioService.buscarPorCnpj(cnpj);
 
         assertThat(usuarioResponse).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Validação do fluxo de buscar todos os usuários")
+    void buscarTodosUsuarios() {
+        Usuario usuarioList[] = { getUsuarioPessoaFisica() };
+        Iterable<Usuario> usuarios = Arrays.asList(usuarioList);
+
+        when(usuarioRepository.findAll()).thenReturn(usuarios);
+        List<UsuarioResponse> usuarioResponses = usuarioService.buscarTodos();
+
+        assertThat(usuarioResponses).isNotEmpty();
     }
 
     @Test
