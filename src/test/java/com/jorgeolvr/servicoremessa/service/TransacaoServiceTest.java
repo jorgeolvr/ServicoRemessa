@@ -1,17 +1,18 @@
 package com.jorgeolvr.servicoremessa.service;
 
 import com.jorgeolvr.servicoremessa.api.CotacaoApi;
+import com.jorgeolvr.servicoremessa.domain.Cotacao;
 import com.jorgeolvr.servicoremessa.domain.PessoaFisica;
 import com.jorgeolvr.servicoremessa.domain.Transacao;
 import com.jorgeolvr.servicoremessa.domain.Usuario;
-import com.jorgeolvr.servicoremessa.dto.pessoafisica.request.PessoaFisicaRequest;
+import com.jorgeolvr.servicoremessa.dto.cotacao.response.ValueResponse;
 import com.jorgeolvr.servicoremessa.dto.pessoafisica.response.PessoaFisicaResponse;
 import com.jorgeolvr.servicoremessa.dto.transacao.request.TransacaoRequest;
 import com.jorgeolvr.servicoremessa.dto.transacao.response.TransacaoResponse;
-import com.jorgeolvr.servicoremessa.dto.usuario.request.UsuarioRequest;
 import com.jorgeolvr.servicoremessa.dto.usuario.response.UsuarioResponse;
 import com.jorgeolvr.servicoremessa.enums.TipoMovimentacao;
 import com.jorgeolvr.servicoremessa.enums.TipoPessoa;
+import com.jorgeolvr.servicoremessa.repository.CotacaoRepository;
 import com.jorgeolvr.servicoremessa.repository.TransacaoRepository;
 import com.jorgeolvr.servicoremessa.repository.UsuarioRepository;
 import com.jorgeolvr.servicoremessa.service.transacao.TransacaoService;
@@ -37,8 +38,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
@@ -49,10 +49,25 @@ class TransacaoServiceTest {
     private TransacaoService transacaoService;
 
     @Mock
+    private UsuarioService usuarioService;
+
+    @Mock
     private TransacaoMapper transacaoMapper;
 
     @Mock
+    private UsuarioMapper usuarioMapper;
+
+    @Mock
     private TransacaoRepository transacaoRepository;
+
+    @Mock
+    private UsuarioRepository usuarioRepository;
+
+    @Mock
+    private CotacaoApi cotacaoApi;
+
+    @Mock
+    private CotacaoRepository cotacaoRepository;
 
     @BeforeAll
     static void setup() {
@@ -103,6 +118,56 @@ class TransacaoServiceTest {
         assertThat(transacaoResponses).isNotEmpty();
     }
 
+    @Test
+    @DisplayName("Validação do fluxo de buscar realizar transação sem cotacao cadastrada")
+    void realizarTransacaoSemCotacaoCadastrada() throws Throwable {
+        Transacao transacaoMock = getTransacao();
+        TransacaoRequest transacaoRequestMock = getTransacaoRequest();
+        TransacaoResponse transacaoResponseMock = getTransacaoResponse();
+
+        Usuario usuarioMock = getUsuario();
+        Optional<Usuario> usuarioOptionalMock = Optional.of(usuarioMock);
+
+        UsuarioResponse usuarioResponseMock = getUsuarioResponse();
+
+        ValueResponse valueResponseMock = getValueResponse();
+
+        when(usuarioRepository.findById(transacaoRequestMock.getOrigemId())).thenReturn(usuarioOptionalMock);
+        when(usuarioMapper.toResponse(usuarioMock)).thenReturn(usuarioResponseMock);
+        when(transacaoService.verificarSaldo(usuarioMapper.toResponse(usuarioMock), transacaoRequestMock.getValor())).thenReturn(true);
+        when(transacaoService.montarTransacao(usuarioMock, transacaoRequestMock, TipoMovimentacao.SAIDA)).thenReturn(transacaoMock);
+        when(cotacaoApi.buscarCotacaoDolarDia()).thenReturn(valueResponseMock);
+        doReturn(transacaoResponseMock).when(transacaoMapper).toResponse(transacaoMock);
+        TransacaoResponse transacaoResponse = transacaoService.realizarTransacao(transacaoRequestMock);
+
+        assertThat(transacaoResponse).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Validação do fluxo de buscar realizar transação com cotacao cadastrada")
+    void realizarTransacaoComCotacaoCadastrada() throws Throwable {
+        Transacao transacaoMock = getTransacao();
+        TransacaoRequest transacaoRequestMock = getTransacaoRequest();
+        TransacaoResponse transacaoResponseMock = getTransacaoResponse();
+
+        Usuario usuarioMock = getUsuario();
+        Optional<Usuario> usuarioOptionalMock = Optional.of(usuarioMock);
+
+        UsuarioResponse usuarioResponseMock = getUsuarioResponse();
+
+        Cotacao cotacaoMock = getCotacao();
+
+        when(usuarioRepository.findById(transacaoRequestMock.getOrigemId())).thenReturn(usuarioOptionalMock);
+        when(usuarioMapper.toResponse(usuarioMock)).thenReturn(usuarioResponseMock);
+        when(transacaoService.verificarSaldo(usuarioMapper.toResponse(usuarioMock), transacaoRequestMock.getValor())).thenReturn(true);
+        when(transacaoService.montarTransacao(usuarioMock, transacaoRequestMock, TipoMovimentacao.SAIDA)).thenReturn(transacaoMock);
+        when(cotacaoRepository.findTopByOrderByIdDesc()).thenReturn(cotacaoMock);
+        doReturn(transacaoResponseMock).when(transacaoMapper).toResponse(transacaoMock);
+        TransacaoResponse transacaoResponse = transacaoService.realizarTransacao(transacaoRequestMock);
+
+        assertThat(transacaoResponse).isNotNull();
+    }
+
     Transacao getTransacao() {
         Transacao transacao = new Transacao();
 
@@ -128,6 +193,7 @@ class TransacaoServiceTest {
     TransacaoResponse getTransacaoResponse() {
         TransacaoResponse transacaoResponse = new TransacaoResponse();
 
+        transacaoResponse.setId(1L);
         transacaoResponse.setDataTransacao(LocalDate.now());
         transacaoResponse.setValor(BigDecimal.ONE);
         transacaoResponse.setTipoMovimentacao(TipoMovimentacao.SAIDA);
@@ -152,21 +218,6 @@ class TransacaoServiceTest {
         return usuario;
     }
 
-    UsuarioRequest getUsuarioRequest() {
-        UsuarioRequest usuarioRequest = new UsuarioRequest();
-
-        usuarioRequest.setNome("Usuario");
-        usuarioRequest.setEmail("usuario@usuario.com");
-        usuarioRequest.setSenha("123");
-        usuarioRequest.setSaldoReal(BigDecimal.ZERO);
-        usuarioRequest.setSaldoDolar(BigDecimal.ZERO);
-        usuarioRequest.setTipoPessoa(TipoPessoa.FISICA);
-        usuarioRequest.setPessoaFisica(mock(PessoaFisicaRequest.class));
-        usuarioRequest.setPessoaJuridica(null);
-
-        return usuarioRequest;
-    }
-
     UsuarioResponse getUsuarioResponse() {
         UsuarioResponse usuarioResponse = new UsuarioResponse();
 
@@ -180,5 +231,23 @@ class TransacaoServiceTest {
         usuarioResponse.setPessoaJuridica(null);
 
         return usuarioResponse;
+    }
+
+    ValueResponse getValueResponse() {
+        ValueResponse valueResponse = new ValueResponse();
+
+        valueResponse.setCotacaoCompra(BigDecimal.ONE);
+        valueResponse.setCotacaoVenda(BigDecimal.ONE);
+
+        return valueResponse;
+    }
+
+    Cotacao getCotacao() {
+        Cotacao cotacao = new Cotacao();
+
+        cotacao.setDataCotacao(LocalDate.now());
+        cotacao.setValor(BigDecimal.ONE);
+
+        return cotacao;
     }
 }
