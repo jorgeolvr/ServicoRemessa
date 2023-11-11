@@ -117,7 +117,12 @@ public class TransacaoService {
             usuarioService.atualizar(usuarioDestinoRequest.getId(), usuarioDestinoRequest);
 
             // Retorna o dado da transacao de saída
-            return transacaoMapper.toResponse(transacaoSaida);
+            TransacaoResponse transacaoResponse = transacaoMapper.toResponse(transacaoSaida);
+            UsuarioResponse usuarioResponse = usuarioMapper.toResponse(transacaoSaida.getUsuario());
+
+            transacaoResponse.setUsuario(usuarioResponse);
+
+            return transacaoResponse;
         } else {
             return null;
         }
