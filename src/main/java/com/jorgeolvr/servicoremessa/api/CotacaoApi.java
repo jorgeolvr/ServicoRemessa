@@ -11,8 +11,10 @@ import reactor.core.Exceptions;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.util.Objects;
 
 @Slf4j
@@ -28,7 +30,7 @@ public class CotacaoApi {
 
     public ValueResponse buscarCotacaoDolarDia() throws Throwable {
         ValueResponse valueResponse = null;
-        LocalDate localDate = LocalDate.now();
+        LocalDate localDate = validarDataCotacao();
 
         try {
             CotacaoResponse cotacaoResponse = webClient.get().uri(builder -> builder.path("/CotacaoDolarDia(dataCotacao=@dataCotacao)")
@@ -47,5 +49,29 @@ public class CotacaoApi {
         }
 
         return valueResponse;
+    }
+
+    public LocalDate validarDataCotacao() {
+        LocalDate data = LocalDate.now();
+
+        if (isSaturday(data)) {
+            data = data.minusDays(1);
+        }
+
+        if (isSunday(data)) {
+            data = data.minusDays(2);
+        }
+
+        return data;
+    }
+
+    public static boolean isSaturday(final LocalDate ld) {
+        DayOfWeek day = DayOfWeek.of(ld.get(ChronoField.DAY_OF_WEEK));
+        return day == DayOfWeek.SATURDAY;
+    }
+
+    public static boolean isSunday(final LocalDate ld) {
+        DayOfWeek day = DayOfWeek.of(ld.get(ChronoField.DAY_OF_WEEK));
+        return day == DayOfWeek.SUNDAY;
     }
 }
