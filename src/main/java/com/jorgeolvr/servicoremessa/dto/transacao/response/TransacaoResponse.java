@@ -1,6 +1,7 @@
 package com.jorgeolvr.servicoremessa.dto.transacao.response;
 
 import com.jorgeolvr.servicoremessa.domain.Usuario;
+import com.jorgeolvr.servicoremessa.dto.usuario.response.UsuarioResponse;
 import com.jorgeolvr.servicoremessa.enums.TipoMovimentacao;
 import lombok.Data;
 
@@ -17,5 +18,5 @@ public class TransacaoResponse {
 
     private LocalDate dataTransacao;
 
-    private Usuario usuario;
+    private UsuarioResponse usuario;
 }

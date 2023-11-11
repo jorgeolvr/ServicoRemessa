@@ -61,12 +61,12 @@ public class TransacaoController {
 
     @PostMapping
     public ResponseEntity<TransacaoResponse> transacao(@Valid @RequestBody TransacaoRequest transacaoRequest) throws Throwable {
-        TransacaoResponse usuarioResponse = transacaoService.realizarTransacao(transacaoRequest);
+        TransacaoResponse transacaoResponse = transacaoService.realizarTransacao(transacaoRequest);
 
-        if (Objects.isNull(usuarioResponse)) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (Objects.isNull(transacaoResponse)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            return ResponseEntity.ok(usuarioResponse);
+            return ResponseEntity.ok(transacaoResponse);
         }
     }
 }
