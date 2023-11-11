@@ -18,6 +18,7 @@ import com.jorgeolvr.servicoremessa.service.usuario.UsuarioService;
 import com.jorgeolvr.servicoremessa.service.usuario.mapper.UsuarioMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -94,7 +95,7 @@ public class TransacaoService {
         return transacaoResponses;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor=Exception.class)
     public TransacaoResponse realizarTransacao(TransacaoRequest transacaoRequest) throws Throwable {
         Usuario usuarioOrigem = buscarUsuario(transacaoRequest.getOrigemId());
         Usuario usuarioDestino = buscarUsuario(transacaoRequest.getDestinoId());

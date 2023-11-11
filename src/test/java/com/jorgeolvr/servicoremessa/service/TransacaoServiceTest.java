@@ -49,9 +49,6 @@ class TransacaoServiceTest {
     private TransacaoService transacaoService;
 
     @Mock
-    private UsuarioService usuarioService;
-
-    @Mock
     private TransacaoMapper transacaoMapper;
 
     @Mock
