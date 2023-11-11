@@ -66,6 +66,7 @@ public class TransacaoService {
 
         if (transacao.isPresent()) {
             transacaoResponse = transacaoMapper.toResponse(transacao.get());
+            transacaoResponse.setUsuario(usuarioMapper.toResponse(transacao.get().getUsuario()));
         }
 
         return transacaoResponse;
@@ -77,6 +78,8 @@ public class TransacaoService {
 
         transacaoRepository.findByTipoMovimentacao(tipoMovimentacao).forEach(transacao -> {
             TransacaoResponse transacaoResponse = transacaoMapper.toResponse(transacao);
+            transacaoResponse.setUsuario(usuarioMapper.toResponse(transacao.getUsuario()));
+
             transacaoResponses.add(transacaoResponse);
         });
 
@@ -89,6 +92,8 @@ public class TransacaoService {
 
         transacaoRepository.findAll().forEach(transacao -> {
             TransacaoResponse transacaoResponse = transacaoMapper.toResponse(transacao);
+            transacaoResponse.setUsuario(usuarioMapper.toResponse(transacao.getUsuario()));
+
             transacaoResponses.add(transacaoResponse);
         });
 
