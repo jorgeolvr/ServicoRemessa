@@ -17,6 +17,7 @@ import com.jorgeolvr.servicoremessa.service.transacao.mapper.TransacaoMapper;
 import com.jorgeolvr.servicoremessa.service.usuario.UsuarioService;
 import com.jorgeolvr.servicoremessa.service.usuario.mapper.UsuarioMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,6 +88,7 @@ public class TransacaoService {
     }
 
     @Transactional
+    @Cacheable("transacoes")
     public List<TransacaoResponse> buscarTodos() {
         List<TransacaoResponse> transacaoResponses = new ArrayList<>();
 
