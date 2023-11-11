@@ -1,6 +1,7 @@
 package com.jorgeolvr.servicoremessa.service.transacao;
 
 import com.jorgeolvr.servicoremessa.api.CotacaoApi;
+import com.jorgeolvr.servicoremessa.domain.Cotacao;
 import com.jorgeolvr.servicoremessa.domain.Transacao;
 import com.jorgeolvr.servicoremessa.domain.Usuario;
 import com.jorgeolvr.servicoremessa.dto.transacao.request.TransacaoRequest;
@@ -9,6 +10,7 @@ import com.jorgeolvr.servicoremessa.dto.usuario.request.UsuarioRequest;
 import com.jorgeolvr.servicoremessa.dto.usuario.response.UsuarioResponse;
 import com.jorgeolvr.servicoremessa.enums.TipoMovimentacao;
 import com.jorgeolvr.servicoremessa.enums.TipoPessoa;
+import com.jorgeolvr.servicoremessa.repository.CotacaoRepository;
 import com.jorgeolvr.servicoremessa.repository.TransacaoRepository;
 import com.jorgeolvr.servicoremessa.repository.UsuarioRepository;
 import com.jorgeolvr.servicoremessa.service.transacao.mapper.TransacaoMapper;
@@ -42,15 +44,18 @@ public class TransacaoService {
 
     private final CotacaoApi cotacaoApi;
 
+    private final CotacaoRepository cotacaoRepository;
+
     public TransacaoService(UsuarioService usuarioService, UsuarioRepository usuarioRepository,
                             UsuarioMapper usuarioMapper, TransacaoRepository transacaoRepository,
-                            TransacaoMapper transacaoMapper, CotacaoApi cotacaoApi) {
+                            TransacaoMapper transacaoMapper, CotacaoApi cotacaoApi, CotacaoRepository cotacaoRepository) {
         this.usuarioService = usuarioService;
         this.usuarioRepository = usuarioRepository;
         this.usuarioMapper = usuarioMapper;
         this.transacaoRepository = transacaoRepository;
         this.transacaoMapper = transacaoMapper;
         this.cotacaoApi = cotacaoApi;
+        this.cotacaoRepository = cotacaoRepository;
     }
 
     @Transactional
@@ -228,8 +233,28 @@ public class TransacaoService {
 
         saldoAtualizado = saldoAtualizado.add(saldoDolar);
 
+        if (Objects.isNull(cotacaoRepository.findTopByOrderByIdDesc())) {
+            Cotacao cotacao = new Cotacao();
+
+            BigDecimal cotacaoCompra = cotacaoApi.buscarCotacaoDolarDia().getCotacaoCompra();
+
+            cotacao.setDataCotacao(LocalDate.now());
+            cotacao.setValor(cotacaoCompra);
+
+            cotacaoRepository.save(cotacao);
+
+            saldoAtualizado = atualizarSaldoDolar(valorTransacao, cotacaoCompra, saldoAtualizado);
+        } else {
+            Cotacao cotacao = cotacaoRepository.findTopByOrderByIdDesc();
+            saldoAtualizado = atualizarSaldoDolar(valorTransacao, cotacao.getValor(), saldoAtualizado);
+        }
+
+        return saldoAtualizado;
+    }
+
+    private static BigDecimal atualizarSaldoDolar(BigDecimal valorTransacao, BigDecimal cotacaoCompra, BigDecimal saldoAtualizado) {
         BigDecimal valorTransacaoAjustadoCotacao = valorTransacao.
-                divide(cotacaoApi.buscarCotacaoDolarDia().getCotacaoCompra(), 2, RoundingMode.HALF_UP);
+                divide(cotacaoCompra, 2, RoundingMode.HALF_UP);
 
         saldoAtualizado = saldoAtualizado.add(valorTransacaoAjustadoCotacao);
 
