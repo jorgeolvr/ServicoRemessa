@@ -94,7 +94,6 @@ public class TransacaoService {
 
         transacaoRepository.findAll().forEach(transacao -> {
             TransacaoResponse transacaoResponse = transacaoMapper.toResponse(transacao);
-            transacaoResponse.setUsuario(usuarioMapper.toResponse(transacao.getUsuario()));
 
             transacaoResponses.add(transacaoResponse);
         });

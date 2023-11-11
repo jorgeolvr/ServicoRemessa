@@ -49,6 +49,9 @@ class TransacaoServiceTest {
     private TransacaoService transacaoService;
 
     @Mock
+    private UsuarioService usuarioService;
+
+    @Mock
     private TransacaoMapper transacaoMapper;
 
     @Mock
@@ -97,7 +100,13 @@ class TransacaoServiceTest {
 
         transacaoResponsesMock.add(transacao);
 
+        TransacaoResponse transacaoResponseMock = getTransacaoResponse();
+
+        UsuarioResponse usuarioResponseMock = getUsuarioResponse();
+
         when(transacaoRepository.findByTipoMovimentacao(tipoMovimentacao)).thenReturn(transacaoResponsesMock);
+        when(transacaoMapper.toResponse(transacao)).thenReturn(transacaoResponseMock);
+        when(usuarioMapper.toResponse(transacao.getUsuario())).thenReturn(usuarioResponseMock);
         List<TransacaoResponse> transacaoResponses = transacaoService.buscarPorTipoMovimentacao(tipoMovimentacao);
 
         assertThat(transacaoResponses).isNotEmpty();
@@ -172,7 +181,7 @@ class TransacaoServiceTest {
         transacao.setDataTransacao(LocalDate.now());
         transacao.setValor(BigDecimal.ONE);
         transacao.setTipoMovimentacao(TipoMovimentacao.SAIDA);
-        transacao.setUsuario(mock(Usuario.class));
+        transacao.setUsuario(getUsuario());
 
         return transacao;
     }
@@ -194,7 +203,7 @@ class TransacaoServiceTest {
         transacaoResponse.setDataTransacao(LocalDate.now());
         transacaoResponse.setValor(BigDecimal.ONE);
         transacaoResponse.setTipoMovimentacao(TipoMovimentacao.SAIDA);
-        transacaoResponse.setUsuario(mock(UsuarioResponse.class));
+        transacaoResponse.setUsuario(getUsuarioResponse());
 
         return transacaoResponse;
     }
