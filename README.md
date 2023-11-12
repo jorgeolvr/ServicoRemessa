@@ -68,13 +68,13 @@ mvn clean package
 Com o arquivo devidamente localizado na pasta target execute:
 
 ```
-docker build -t servico-remessa
+docker build -t servico-remessa .
 ```
 
 Após isso, basta executar o próximo comando para rodar a aplicação:
 
 ```
-docker run --name java-container -d -p 8080:8080 servico-remessa
+docker run --name servico-remessa -d -p 8080:8080 servico-remessa
 ```
 
 Devido ao redirecionamento de portas a aplicação está completamente disponível para uso em sua máquina!
