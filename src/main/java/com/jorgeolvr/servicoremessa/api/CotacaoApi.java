@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 @Slf4j
 @Component
@@ -29,19 +30,18 @@ public class CotacaoApi {
     }
 
     public ValueResponse buscarCotacaoDolarDia() throws Throwable {
-        ValueResponse valueResponse = null;
-        LocalDate localDate = validarDataCotacao();
+        ValueResponse valueResponse = new ValueResponse();
+        LocalDate diaAtual = LocalDate.now();
 
         try {
-            CotacaoResponse cotacaoResponse = webClient.get().uri(builder -> builder.path("/CotacaoDolarDia(dataCotacao=@dataCotacao)")
-                            .queryParam("@dataCotacao", "'" + localDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + "'")
-                            .queryParam("$top", "100")
-                            .queryParam("$skip", "0")
-                            .queryParam("$format", "json").build())
-                    .accept(MediaType.APPLICATION_JSON).retrieve()
-                    .bodyToMono(CotacaoResponse.class).block();
+            CotacaoResponse cotacaoResponse = getCotacao(diaAtual);
 
-            if (Objects.nonNull(cotacaoResponse)) {
+            /** Caso o valor retornado pela api de cotação esteja vazio por ser final de
+             *  semana ou feriado então deve-se buscar a última cotação válida
+             */
+            if (cotacaoResponse.getValue().isEmpty()) {
+                valueResponse = buscarUltimaCotacaoValida(diaAtual);
+            } else {
                 valueResponse = cotacaoResponse.getValue().get(0);
             }
         } catch (Exception e) {
@@ -51,27 +51,29 @@ public class CotacaoApi {
         return valueResponse;
     }
 
-    public LocalDate validarDataCotacao() {
-        LocalDate data = LocalDate.now();
+    private CotacaoResponse getCotacao(LocalDate localDate) {
+        CotacaoResponse cotacaoResponse = webClient.get().uri(builder -> builder.path("/CotacaoDolarDia(dataCotacao=@dataCotacao)")
+                        .queryParam("@dataCotacao", "'" + localDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + "'")
+                        .queryParam("$top", "100")
+                        .queryParam("$skip", "0")
+                        .queryParam("$format", "json").build())
+                .accept(MediaType.APPLICATION_JSON).retrieve()
+                .bodyToMono(CotacaoResponse.class).block();
+        return cotacaoResponse;
+    }
 
-        if (isSaturday(data)) {
+    public ValueResponse buscarUltimaCotacaoValida(LocalDate data) {
+        ValueResponse valueResponse = new ValueResponse();
+
+        // Buscar cotação de datas anteriores até achar um valor válido
+        while (Objects.isNull(valueResponse.getCotacaoCompra())) {
             data = data.minusDays(1);
+
+            if (!getCotacao(data).getValue().isEmpty()) {
+                valueResponse = getCotacao(data).getValue().get(0);
+            }
         }
 
-        if (isSunday(data)) {
-            data = data.minusDays(2);
-        }
-
-        return data;
-    }
-
-    public static boolean isSaturday(final LocalDate ld) {
-        DayOfWeek day = DayOfWeek.of(ld.get(ChronoField.DAY_OF_WEEK));
-        return day == DayOfWeek.SATURDAY;
-    }
-
-    public static boolean isSunday(final LocalDate ld) {
-        DayOfWeek day = DayOfWeek.of(ld.get(ChronoField.DAY_OF_WEEK));
-        return day == DayOfWeek.SUNDAY;
+        return valueResponse;
     }
 }
