@@ -1,0 +1,299 @@
+{
+	"info": {
+		"_postman_id": "82e00fcf-5c0a-4d61-b3fb-5726e19f00d6",
+		"name": "Serviço remessa",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7169278"
+	},
+	"item": [
+		{
+			"name": "Buscar usuário por id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/backend/usuario/buscar-por-id/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"backend",
+						"usuario",
+						"buscar-por-id",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar usuário por cpf",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/backend/usuario/buscar-por-cpf/13374102689",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"backend",
+						"usuario",
+						"buscar-por-cpf",
+						"13374102689"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar usuário por cnpj",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/backend/usuario/buscar-por-cnpj/33237182000178",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"backend",
+						"usuario",
+						"buscar-por-cnpj",
+						"33237182000178"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar todos os usuários",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/backend/usuario",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"backend",
+						"usuario"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar transação por id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/backend/transacao/buscar-por-id/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"backend",
+						"transacao",
+						"buscar-por-id",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar transação por tipo de movimentação",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/backend/transacao/buscar-por-tipo-movimentacao/SAIDA",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"backend",
+						"transacao",
+						"buscar-por-tipo-movimentacao",
+						"SAIDA"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar todas as transações",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/backend/transacao",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"backend",
+						"transacao"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar pessoa física",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\": \"Teste PF\",\n    \"email\": \"pf@teste.com\",\n    \"senha\": \"123\",\n    \"saldoReal\": 1000,\n    \"saldoDolar\": 1000,\n    \"tipoPessoa\": \"FISICA\",\n    \"pessoaFisica\": {\n        \"cpf\": \"87279578020\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/backend/usuario",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"backend",
+						"usuario"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar pessoa jurídica",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\": \"Teste PF\",\n    \"email\": \"pj@teste.com\",\n    \"senha\": \"456\",\n    \"saldoReal\": 1000,\n    \"saldoDolar\": 1000,\n    \"tipoPessoa\": \"JURIDICA\",\n    \"pessoaJuridica\": {\n        \"cnpj\": \"33237182000178\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/backend/usuario",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"backend",
+						"usuario"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Realizar transação",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"origemId\": 1,\n    \"destinoId\": 2,\n    \"valor\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/backend/transacao",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"backend",
+						"transacao"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar usuário",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\": \"Jorge Oliveira\",\n    \"email\": \"jorgeallancastro@icloud.com\",\n    \"senha\": \"123\",\n    \"saldoReal\": 300,\n    \"saldoDolar\": 100,\n    \"tipoPessoa\": \"FISICA\",\n    \"pessoaFisica\": {\n        \"cpf\": \"13374102689\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/backend/usuario/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"backend",
+						"usuario",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
