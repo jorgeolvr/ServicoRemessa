@@ -240,22 +240,34 @@ public class TransacaoService {
 
         saldoAtualizado = saldoAtualizado.add(saldoDolar);
 
+        // Se não existe cotação no banco então busca a cotação da api
         if (Objects.isNull(cotacaoRepository.findTopByOrderByIdDesc())) {
-            Cotacao cotacao = new Cotacao();
-
-            BigDecimal cotacaoCompra = cotacaoApi.buscarCotacaoDolarDia().getCotacaoCompra();
-
-            cotacao.setDataCotacao(LocalDate.now());
-            cotacao.setValor(cotacaoCompra);
-
-            cotacaoRepository.save(cotacao);
-
-            saldoAtualizado = atualizarSaldoDolar(valorTransacao, cotacaoCompra, saldoAtualizado);
+            saldoAtualizado = buscarValorCotacaoApi(valorTransacao, saldoAtualizado);
         } else {
             Cotacao cotacao = cotacaoRepository.findTopByOrderByIdDesc();
-            saldoAtualizado = atualizarSaldoDolar(valorTransacao, cotacao.getValor(), saldoAtualizado);
+
+            // Se existe cotação no banco mas está desatualizada então busca a cotação da api
+            if (!cotacao.getDataCotacao().equals(LocalDate.now())) {
+                saldoAtualizado = buscarValorCotacaoApi(valorTransacao, saldoAtualizado);
+            } else {
+                saldoAtualizado = atualizarSaldoDolar(valorTransacao, cotacao.getValor(), saldoAtualizado);
+            }
         }
 
+        return saldoAtualizado;
+    }
+
+    private BigDecimal buscarValorCotacaoApi(BigDecimal valorTransacao, BigDecimal saldoAtualizado) throws Throwable {
+        Cotacao cotacao = new Cotacao();
+
+        BigDecimal cotacaoCompra = cotacaoApi.buscarCotacaoDolarDia().getCotacaoCompra();
+
+        cotacao.setDataCotacao(LocalDate.now());
+        cotacao.setValor(cotacaoCompra);
+
+        cotacaoRepository.save(cotacao);
+
+        saldoAtualizado = atualizarSaldoDolar(valorTransacao, cotacaoCompra, saldoAtualizado);
         return saldoAtualizado;
     }
 
