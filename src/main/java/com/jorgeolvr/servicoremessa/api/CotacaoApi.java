@@ -45,7 +45,7 @@ public class CotacaoApi {
                 valueResponse = cotacaoResponse.getValue().get(0);
             }
         } catch (Exception e) {
-            valueResponse = buscarUltimaCotacaoValida(diaAtual);
+            throw Exceptions.unwrap(e);
         }
 
         return valueResponse;
@@ -53,7 +53,7 @@ public class CotacaoApi {
 
     private CotacaoResponse getCotacao(LocalDate localDate) {
         CotacaoResponse cotacaoResponse = webClient.get().uri(builder -> builder.path("/CotacaoDolarDia(dataCotacao=@dataCotacao)")
-                        .queryParam("@dataCotacao", "'" + localDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + "'")
+                        .queryParam("@dataCotacao", "'" + localDate.format(DateTimeFormatter.ofPattern("MM-dd-yyyy")) + "'")
                         .queryParam("$top", "100")
                         .queryParam("$skip", "0")
                         .queryParam("$format", "json").build())
