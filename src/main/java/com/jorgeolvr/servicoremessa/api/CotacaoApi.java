@@ -45,7 +45,7 @@ public class CotacaoApi {
                 valueResponse = cotacaoResponse.getValue().get(0);
             }
         } catch (Exception e) {
-            throw Exceptions.unwrap(e);
+            valueResponse = buscarUltimaCotacaoValida(diaAtual);
         }
 
         return valueResponse;
